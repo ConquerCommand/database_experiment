@@ -139,7 +139,7 @@ foreach ($documents as $doc) {
                 <i class="fas fa-tasks"></i>
                 <span>Career Tasks</span>
             </a>
-            <a href="documents.php" class="menu-item active">
+            <a href="document.php" class="menu-item active">
                 <i class="fas fa-file-alt"></i>
                 <span>Documents</span>
             </a>
@@ -189,7 +189,7 @@ foreach ($documents as $doc) {
             </div>
             
             <!-- Add Document Form -->
-            <form class="document-form" method="POST" action="documents.php">
+            <form class="document-form" method="POST" action="document.php">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="title"><i class="fas fa-heading"></i> Document Title</label>
@@ -290,7 +290,7 @@ foreach ($documents as $doc) {
                         <?php foreach ($documents as $doc): ?>
                             <div class="document-card <?php echo $doc['status']; ?>" data-category="<?php echo $doc['category']; ?>">
                                 <div class="document-status">
-                                    <a href="documents.php?toggle_id=<?php echo $doc['id']; ?>" class="status-btn <?php echo $doc['status']; ?>">
+                                    <a href="document.php?toggle_id=<?php echo $doc['id']; ?>" class="status-btn <?php echo $doc['status']; ?>">
                                         <i class="fas fa-<?php echo $doc['status'] == 'completed' ? 'check-circle' : 'circle'; ?>"></i>
                                         <span><?php echo ucfirst($doc['status']); ?></span>
                                     </a>
@@ -315,7 +315,7 @@ foreach ($documents as $doc) {
                                     </div>
                                 </div>
                                 <div class="document-actions">
-                                    <a href="documents.php?delete_id=<?php echo $doc['id']; ?>" class="delete-btn" 
+                                    <a href="document.php?delete_id=<?php echo $doc['id']; ?>" class="delete-btn" 
                                        onclick="return confirm('Are you sure you want to delete this document?')">
                                         <i class="fas fa-trash"></i>
                                     </a>
@@ -392,4 +392,5 @@ foreach ($documents as $doc) {
         window.addEventListener('resize', handleResize);
     </script>
 </body>
+
 </html>
