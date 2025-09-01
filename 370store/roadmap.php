@@ -137,7 +137,7 @@ foreach ($roadmap_items as $item) {
                 <i class="fas fa-tasks"></i>
                 <span>Career Tasks</span>
             </a>
-            <a href="documents.php" class="menu-item">
+            <a href="document.php" class="menu-item">
                 <i class="fas fa-file-alt"></i>
                 <span>Documents</span>
             </a>
@@ -472,4 +472,5 @@ foreach ($roadmap_items as $item) {
         });
     </script>
 </body>
+
 </html>
