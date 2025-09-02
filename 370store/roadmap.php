@@ -1,12 +1,24 @@
 <?php
-require_once("UniversityDB.php");
+require_once("connect.php");
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
 
-// Fetch all tasks
+// Fetch only the logged-in user’s tasks
 $tasks = [];
-$tasks_sql = "SELECT * FROM tasks ORDER BY 
-        FIELD(category, 'school', 'high-school', 'university', 'bachelor', 'master', 'phd', 'job', 'other'),
-        due_date ASC, created_at ASC";
-$tasks_result = mysqli_query($conn, $tasks_sql);
+$tasks_sql = "SELECT * FROM tasks 
+              WHERE user_id = ? 
+              ORDER BY 
+              FIELD(category, 'school', 'high-school', 'university', 'bachelor', 'master', 'phd', 'job', 'other'),
+              due_date ASC, created_at ASC";
+$task_stmt = mysqli_prepare($conn, $tasks_sql);
+mysqli_stmt_bind_param($task_stmt, "i", $_SESSION['user_id']);
+mysqli_stmt_execute($task_stmt);
+$tasks_result = mysqli_stmt_get_result($task_stmt);
+mysqli_stmt_close($task_stmt);
+
 
 if ($tasks_result && mysqli_num_rows($tasks_result) > 0) {
     while ($row = mysqli_fetch_assoc($tasks_result)) {
@@ -14,12 +26,18 @@ if ($tasks_result && mysqli_num_rows($tasks_result) > 0) {
     }
 }
 
-// Fetch all documents
+// Fetch only the logged-in user’s documents
 $documents = [];
-$documents_sql = "SELECT * FROM documents ORDER BY 
-        FIELD(category, 'academic', 'grade_sheet', 'exam_result', 'competition', 'co_curricular', 'achievement', 'research', 'birth_certificate', 'passport', 'bank', 'other'),
-        due_date ASC, created_at ASC";
-$documents_result = mysqli_query($conn, $documents_sql);
+$documents_sql = "SELECT * FROM documents 
+                  WHERE user_id = ? 
+                  ORDER BY 
+                  FIELD(category, 'academic', 'grade_sheet', 'exam_result', 'competition', 'co_curricular', 'achievement', 'research', 'birth_certificate', 'passport', 'bank', 'other'),
+                  due_date ASC, created_at ASC";
+$document_stmt = mysqli_prepare($conn, $documents_sql);
+mysqli_stmt_bind_param($document_stmt, "i", $_SESSION['user_id']);
+mysqli_stmt_execute($document_stmt);
+$documents_result = mysqli_stmt_get_result($document_stmt);
+mysqli_stmt_close($document_stmt);
 
 if ($documents_result && mysqli_num_rows($documents_result) > 0) {
     while ($row = mysqli_fetch_assoc($documents_result)) {
@@ -73,7 +91,8 @@ $grouped_items = [
     'bachelor' => [],
     'master' => [],
     'phd' => [],
-    'job' => [],
+    'job' => [],  
+    'other' => [], 
     'documents' => [] // For all document types
 ];
 
@@ -472,5 +491,4 @@ foreach ($roadmap_items as $item) {
         });
     </script>
 </body>
-
 </html>
