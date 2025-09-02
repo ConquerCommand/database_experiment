@@ -1,4 +1,3 @@
--- Add this to your u_s.sql file or run separately
 CREATE TABLE documents (
     id INT(11) NOT NULL AUTO_INCREMENT,
     user_id INT(11) DEFAULT NULL, -- For future user association
@@ -25,3 +24,17 @@ INSERT INTO documents (title, description, category, status) VALUES
 ('Grade 10 Transcript', 'Official grade 10 transcript', 'grade_sheet', 'completed'),
 ('Soccer Team Captain', 'Certificate for being soccer team captain', 'co_curricular', 'completed'),
 ('Debate Competition Award', 'First place in regional debate competition', 'achievement', 'completed');
+
+-- 1. Ensure user_id exists and is required
+ALTER TABLE documents 
+MODIFY user_id INT(11) NOT NULL;
+
+-- 2. Add foreign key constraint to link documents to USER table
+ALTER TABLE documents 
+ADD CONSTRAINT fk_documents_user 
+FOREIGN KEY (user_id) REFERENCES USER(UserID) 
+ON DELETE CASCADE;
+
+-- 3. Make sure status always has a default
+ALTER TABLE documents 
+MODIFY status ENUM('pending', 'completed') NOT NULL DEFAULT 'pending';
