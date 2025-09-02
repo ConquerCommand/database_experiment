@@ -1,4 +1,3 @@
--- Add this to your u_s.sql file or run separately
 CREATE TABLE tasks (
     id INT(11) NOT NULL AUTO_INCREMENT,
     user_id INT(11) DEFAULT NULL, -- For future user association
@@ -18,3 +17,37 @@ INSERT INTO tasks (title, description, category, due_date) VALUES
 ('Prepare for SAT', 'Study for SAT exams to get into good universities', 'high-school', '2025-10-10'),
 ('Apply for bachelor programs', 'Submit applications to selected universities', 'bachelor', '2026-01-15'),
 ('Learn programming basics', 'Start with Python or JavaScript fundamentals', 'school', '2025-09-30');
+
+
+ALTER TABLE tasks 
+MODIFY user_id INT(11) NOT NULL;
+
+ALTER TABLE tasks 
+ADD CONSTRAINT fk_tasks_user FOREIGN KEY (user_id) REFERENCES USER(UserID) ON DELETE CASCADE;
+
+
+
+
+
+--roadmap
+
+
+-- 1. Make sure every task belongs to a user
+ALTER TABLE tasks 
+MODIFY user_id INT(11) NOT NULL;
+
+-- 2. Add foreign key constraint for tasks
+ALTER TABLE tasks 
+ADD CONSTRAINT fk_tasks_user 
+FOREIGN KEY (user_id) REFERENCES USER(UserID) 
+ON DELETE CASCADE;
+
+-- 3. Make sure every document belongs to a user
+ALTER TABLE documents 
+MODIFY user_id INT(11) NOT NULL;
+
+-- 4. Add foreign key constraint for documents
+ALTER TABLE documents 
+ADD CONSTRAINT fk_documents_user 
+FOREIGN KEY (user_id) REFERENCES USER(UserID) 
+ON DELETE CASCADE;
