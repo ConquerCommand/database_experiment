@@ -1,5 +1,10 @@
 <?php
-require_once("UniversityDB.php");
+require_once("connect.php");
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
 
 $message = "";
 $errorMessage = "";
@@ -14,11 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_document'])) {
 
     if (!empty($title) && !empty($category)) {
         // Prepare and execute the INSERT query
-        $sql = "INSERT INTO documents (title, description, category, status, due_date) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO documents (user_id, title, description, category, status, due_date) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $sql);
         
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "sssss", $title, $description, $category, $status, $due_date);
+            mysqli_stmt_bind_param($stmt, "isssss", $_SESSION['user_id'], $title, $description, $category, $status, $due_date);
             
             if (mysqli_stmt_execute($stmt)) {
                 $message = "Document added successfully!";
@@ -37,11 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_document'])) {
 // Handle document deletion
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
-    $sql = "DELETE FROM documents WHERE id = ?";
+    $sql = "DELETE FROM documents WHERE id = ? AND user_id = ?";
     $stmt = mysqli_prepare($conn, $sql);
     
     if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "i", $delete_id);
+        mysqli_stmt_bind_param($stmt, "ii", $delete_id, $_SESSION['user_id']);
         
         if (mysqli_stmt_execute($stmt)) {
             $message = "Document deleted successfully!";
@@ -57,22 +62,33 @@ if (isset($_GET['delete_id'])) {
 // Handle status toggle
 if (isset($_GET['toggle_id'])) {
     $toggle_id = $_GET['toggle_id'];
-    $sql = "UPDATE documents SET status = IF(status = 'completed', 'pending', 'completed') WHERE id = ?";
+    $sql = "UPDATE documents 
+            SET status = IF(status = 'completed', 'pending', 'completed') 
+            WHERE id = ? AND user_id = ?";
     $stmt = mysqli_prepare($conn, $sql);
     
     if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "i", $toggle_id);
+        mysqli_stmt_bind_param($stmt, "ii", $toggle_id, $_SESSION['user_id']);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
+        header("Location: document.php");
+        exit();
     }
 }
 
 // Fetch all documents
 $documents = [];
-$sql = "SELECT * FROM documents ORDER BY 
+$sql = "SELECT * FROM documents 
+        WHERE user_id = ?
+        ORDER BY 
         FIELD(category, 'academic', 'grade_sheet', 'exam_result', 'competition', 'co_curricular', 'achievement', 'research', 'birth_certificate', 'passport', 'bank', 'other'),
         status, created_at DESC";
-$result = mysqli_query($conn, $sql);
+
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_bind_param($stmt, "i", $_SESSION['user_id']);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+mysqli_stmt_close($stmt);
 
 if ($result && mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
@@ -142,6 +158,10 @@ foreach ($documents as $doc) {
             <a href="document.php" class="menu-item active">
                 <i class="fas fa-file-alt"></i>
                 <span>Documents</span>
+            </a>
+            <a href="roadmap.php" class="menu-item">
+                <i class="fas fa-road"></i>
+                <span>Roadmap</span>
             </a>
         </div>
         <div class="sidebar-footer">
@@ -392,5 +412,4 @@ foreach ($documents as $doc) {
         window.addEventListener('resize', handleResize);
     </script>
 </body>
-
 </html>
