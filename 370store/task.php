@@ -1,5 +1,10 @@
 <?php
-require_once("UniversityDB.php");
+require_once("connect.php");
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
 
 $message = "";
 $errorMessage = "";
@@ -13,14 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_task'])) {
 
     if (!empty($title) && !empty($category)) {
         // Prepare and execute the INSERT query
-        $sql = "INSERT INTO tasks (title, description, category, due_date) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO tasks (user_id, title, description, category, due_date) VALUES (?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $sql);
         
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "ssss", $title, $description, $category, $due_date);
+            mysqli_stmt_bind_param($stmt, "issss", $_SESSION['user_id'], $title, $description, $category, $due_date);
             
             if (mysqli_stmt_execute($stmt)) {
                 $message = "Task added successfully!";
+                header("Location: task.php?success=1");
+                exit();
             } else {
                 $errorMessage = "Error adding task: " . mysqli_error($conn);
             }
@@ -36,14 +43,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_task'])) {
 // Handle task deletion
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
-    $sql = "DELETE FROM tasks WHERE id = ?";
+    $sql = "DELETE FROM tasks WHERE id = ? AND user_id = ?";
     $stmt = mysqli_prepare($conn, $sql);
     
     if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "i", $delete_id);
+        mysqli_stmt_bind_param($stmt, "ii", $delete_id, $_SESSION['user_id']);
         
         if (mysqli_stmt_execute($stmt)) {
             $message = "Task deleted successfully!";
+            header("Location: task.php?success=1");
+            exit();
         } else {
             $errorMessage = "Error deleting task: " . mysqli_error($conn);
         }
@@ -56,22 +65,29 @@ if (isset($_GET['delete_id'])) {
 // Handle task completion toggle
 if (isset($_GET['toggle_id'])) {
     $toggle_id = $_GET['toggle_id'];
-    $sql = "UPDATE tasks SET completed = NOT completed WHERE id = ?";
+    $sql = "UPDATE tasks SET completed = NOT completed WHERE id = ? AND user_id = ?";
     $stmt = mysqli_prepare($conn, $sql);
     
     if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "i", $toggle_id);
+        mysqli_stmt_bind_param($stmt, "ii", $toggle_id, $_SESSION['user_id']);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
+        header("Location: task.php?success=1");
+        exit();
     }
 }
 
-// Fetch all tasks
+// Fetch logged in user tasks
 $tasks = [];
-$sql = "SELECT * FROM tasks ORDER BY 
+$sql = "SELECT * FROM tasks 
+        WHERE user_id = ? 
+        ORDER BY 
         FIELD(category, 'school', 'high-school', 'university', 'bachelor', 'master', 'phd', 'job', 'other'),
         due_date ASC, created_at ASC";
-$result = mysqli_query($conn, $sql);
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_bind_param($stmt, "i", $_SESSION['user_id']);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
 if ($result && mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
@@ -126,6 +142,14 @@ if ($result && mysqli_num_rows($result) > 0) {
             <a href="task.php" class="menu-item active">
                 <i class="fas fa-tasks"></i>
                 <span>Career Tasks</span>
+            </a>
+            <a href="document.php" class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Documents</span>
+            </a>
+            <a href="roadmap.php" class="menu-item">
+                <i class="fas fa-road"></i>
+                <span>Roadmap</span>
             </a>
         </div>
         <div class="sidebar-footer">
