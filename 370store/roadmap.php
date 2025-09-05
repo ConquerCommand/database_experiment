@@ -1,6 +1,6 @@
 <?php
 require_once("connect.php");
-session_start();
+//session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -492,3 +492,4 @@ foreach ($roadmap_items as $item) {
     </script>
 </body>
 </html>
+
