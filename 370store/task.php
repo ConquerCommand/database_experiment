@@ -134,7 +134,7 @@ if ($result && mysqli_num_rows($result) > 0) {
             <i class="fa-solid fa-road"></i>
             <span>Roadmap</span>
         </a>
-        <a href="task.php" class="menu-item">
+        <a href="task.php" class="menu-item active">
             <i class="fas fa-tasks"></i>
             <span>Task</span>
         </a>
@@ -329,3 +329,4 @@ if ($result && mysqli_num_rows($result) > 0) {
     </script>
 </body>
 </html>
+
