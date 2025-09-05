@@ -1,6 +1,5 @@
 <?php
 require_once("connect.php");
-//session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -8,6 +7,15 @@ if (!isset($_SESSION['user_id'])) {
 
 $message = "";
 $errorMessage = "";
+
+
+if (isset($_GET['added']) && $_GET['added'] == 1) { 
+    $message = "Task added successfully!";
+} 
+if (isset($_GET['deleted']) && $_GET['deleted'] == 1) {
+    $message = "Task deleted successfully!";
+}
+
 
 // Handle task creation
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_task'])) {
@@ -25,8 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_task'])) {
             mysqli_stmt_bind_param($stmt, "issss", $_SESSION['user_id'], $title, $description, $category, $due_date);
             
             if (mysqli_stmt_execute($stmt)) {
-                $message = "Task added successfully!";
-                header("Location: task.php?success=1");
+                header("Location: task.php?added=1");
                 exit();
             } else {
                 $errorMessage = "Error adding task: " . mysqli_error($conn);
@@ -50,8 +57,7 @@ if (isset($_GET['delete_id'])) {
         mysqli_stmt_bind_param($stmt, "ii", $delete_id, $_SESSION['user_id']);
         
         if (mysqli_stmt_execute($stmt)) {
-            $message = "Task deleted successfully!";
-            header("Location: task.php?success=1");
+            header("Location: task.php?deleted=1");
             exit();
         } else {
             $errorMessage = "Error deleting task: " . mysqli_error($conn);
@@ -61,6 +67,7 @@ if (isset($_GET['delete_id'])) {
         $errorMessage = "Database error: " . mysqli_error($conn);
     }
 }
+
 
 // Handle task completion toggle
 if (isset($_GET['toggle_id'])) {
@@ -306,4 +313,3 @@ if ($result && mysqli_num_rows($result) > 0) {
     </script>
 </body>
 </html>
-
