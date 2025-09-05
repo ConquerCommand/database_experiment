@@ -129,56 +129,72 @@ foreach ($documents as $doc) {
     <link rel="stylesheet" href="/370store/css/document.css"> <!-- the link should be changed if css file is not loaded -->
 </head>
 <body>
-    <!-- Sidebar (same as UniversityFilter.php) -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">CareerHigh</div>
-            <button class="toggle-btn">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-        <div class="menu-items">
-            <a href="dashboard.php" class="menu-item">
-                <i class="fas fa-home"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-user"></i>
-                <span>Profile</span>
-            </a>
-            <a href="UniversityFilter.php" class="menu-item">
-                <i class="fa fa-university" aria-hidden="true"></i>
-                <span>Search University</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-book"></i>
-                <span>Exam</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-chart-line"></i>
-                <span>Progress</span>
-            </a>
-            <a href="MentorFilter.php" class="menu-item">
-                <i class="fa-solid fa-chalkboard-user"></i>
-                <span>Mentors Available</span>
-            </a>
-            <a href="task.php" class="menu-item">
-                <i class="fas fa-tasks"></i>
-                <span>Career Tasks</span>
-            </a>
-            <a href="document.php" class="menu-item active">
-                <i class="fas fa-file-alt"></i>
-                <span>Documents</span>
-            </a>
-            <a href="roadmap.php" class="menu-item">
-                <i class="fas fa-road"></i>
-                <span>Roadmap</span>
-            </a>
-        </div>
-        <div class="sidebar-footer">
-            <span>CareerHigh v1.0</span>
-        </div>
+    <!-- Sidebar -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">CareerHigh</div>
+        <button class="toggle-btn">
+            <i class="fas fa-bars"></i>
+        </button>
     </div>
+    <div class="menu-items">
+        <a href="dashboard.php" class="menu-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="studentProfile.php" class="menu-item">
+            <i class="fas fa-user"></i>
+            <span>Edit Profile</span>
+        </a>
+        <a href="roadmap.php" class="menu-item">
+            <i class="fa-solid fa-road"></i>
+            <span>Roadmap</span>
+        </a>
+        <a href="task.php" class="menu-item">
+            <i class="fas fa-tasks"></i>
+            <span>Task</span>
+        </a>
+        <a href="UniversityFilter.php" class="menu-item">
+            <i class="fa fa-university" aria-hidden="true"></i>
+            <span>Search University</span>
+        </a>
+        <a href="research_idea.php" class="menu-item">
+            <i class="fa-solid fa-lightbulb"></i>
+            <span>Research Idea</span>
+        </a>
+        <a href="document.php" class="menu-item">
+            <i class="fa-solid fa-passport"></i>
+            <span>Documents</span>
+        </a>
+        <a href="#" class="menu-item">
+            <i class='fas fa-bell'></i>
+            <span>Upcoming Exam</span>
+        </a>
+        <a href="ExamTracker.php" class="menu-item">
+            <i class="fa-solid fa-file-pen"></i>
+            <span>Exam Tracking</span>
+        </a>
+        <a href="#" class="menu-item">
+                <i class="bi bi-activity"></i>
+            <span>Activity</span>
+        </a>
+        <a href="ResearchCollaboration.php" class="menu-item">
+                <i class="fa-solid fa-puzzle-piece"></i>
+            <span>Project Collaboration</span>
+        </a>
+        <a href="MyCollab.php" class="menu-item">
+                <i class="fas fa-handshake"></i>
+            <span>My Collaboration</span>
+        </a>
+        <a href="MentorFilter.php" class="menu-item">
+            <i class="fa-solid fa-chalkboard-user"></i>
+            <span>Mentors Available</span>
+        </a>
+    </div>
+    <div class="sidebar-footer">
+        <span>CareerHigh<br>v1.0</span>
+    </div>
+</div>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -424,5 +440,3 @@ foreach ($documents as $doc) {
     </script>
 </body>
 </html>
-
-
