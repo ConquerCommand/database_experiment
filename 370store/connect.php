@@ -26,16 +26,27 @@ if (isset($_POST['user']) && isset($_POST['pass'])){
     
     $result = mysqli_query($conn, $sql);
 
-    if (mysqli_num_rows($result) != 0){
-        session_start();
+    if (mysqli_num_rows($result) != 0) {
         $row = mysqli_fetch_assoc($result);
         $_SESSION['user_id'] = $row['UserID'];
         $_SESSION['user_type'] = $row['UserType'];
-        header("Location: dashboard.php");
-        exit();
+
+        // Redirect based on UserType
+        if ($row['UserType'] == "Student") {
+            header("Location: dashboard.php");
+            exit();
+        } elseif ($row['UserType'] == "Mentor") {
+            header("Location: mentordash.php");
+            exit();
+        } else {
+            // Default if UserType is unexpected
+            header("Location: dashboard.php");
+            exit();
+        }
     }
     else{
         $error_message = "Invalid email or password";
     }
 }
 ?>
+
