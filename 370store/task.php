@@ -1,6 +1,6 @@
 <?php
 require_once("connect.php");
-session_start();
+//session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -306,3 +306,4 @@ if ($result && mysqli_num_rows($result) > 0) {
     </script>
 </body>
 </html>
+
