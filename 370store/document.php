@@ -1,6 +1,5 @@
 <?php
 require_once("connect.php");
-//session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -10,6 +9,14 @@ $message = "";
 $errorMessage = "";
 
 // Handle document creation
+$message = "";
+if (isset($_GET['added']) && $_GET['added'] == 1) { 
+    $message = "Document added successfully!";
+} 
+if (isset($_GET['deleted']) && $_GET['deleted'] == 1) {
+    $message = "Document deleted successfully!";
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_document'])) {
     $title = trim($_POST['title']);
     $description = trim($_POST['description']);
@@ -27,6 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_document'])) {
             
             if (mysqli_stmt_execute($stmt)) {
                 $message = "Document added successfully!";
+                header("Location: document.php?added=1");
+                exit();
             } else {
                 $errorMessage = "Error adding document: " . mysqli_error($conn);
             }
@@ -50,6 +59,8 @@ if (isset($_GET['delete_id'])) {
         
         if (mysqli_stmt_execute($stmt)) {
             $message = "Document deleted successfully!";
+            header("Location: document.php?deleted=1");
+                exit();
         } else {
             $errorMessage = "Error deleting document: " . mysqli_error($conn);
         }
@@ -413,4 +424,5 @@ foreach ($documents as $doc) {
     </script>
 </body>
 </html>
+
 
