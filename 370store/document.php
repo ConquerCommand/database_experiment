@@ -1,6 +1,6 @@
 <?php
 require_once("connect.php");
-session_start();
+//session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -413,3 +413,4 @@ foreach ($documents as $doc) {
     </script>
 </body>
 </html>
+
