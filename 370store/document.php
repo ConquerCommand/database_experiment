@@ -162,7 +162,7 @@ foreach ($documents as $doc) {
             <i class="fa-solid fa-lightbulb"></i>
             <span>Research Idea</span>
         </a>
-        <a href="document.php" class="menu-item">
+        <a href="document.php" class="menu-item active">
             <i class="fa-solid fa-passport"></i>
             <span>Documents</span>
         </a>
@@ -440,3 +440,4 @@ foreach ($documents as $doc) {
     </script>
 </body>
 </html>
+
